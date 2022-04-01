@@ -1,24 +1,8 @@
 ﻿
 #include <iostream>
 #include <string>
+#include <ctime>
 using namespace std;
-class person {
-    string name;
-    int age;
-public:
-    person(){}
-    person(int ag,string nam):age(ag),name(nam){}
-    void get()
-    {
-        cout << "ваше имя?" << endl; cin >> name;
-        cout << "кол-во лет?" << endl; cin >> age;
-    }
-    void out()
-    {
-        cout << "Имя: " << name;
-        cout << "\nЛет: " << age;
-    }
-};
 class MyExt {
     string error;
 public:
@@ -129,6 +113,7 @@ public:
                 Node* temp = last->prev;
                 temp->next = nullptr;
                 delete last;
+                last = temp;
             }
             Size--;
         }
@@ -149,9 +134,10 @@ public:
             }
             else
             {
-                Node* temp = last->prev;
-                temp->next = nullptr;
-                delete last;
+                Node* temp = first->next;
+                temp->prev = nullptr;
+                delete first;
+                first = temp;
             }
             Size--;
         }
@@ -257,25 +243,46 @@ int main()
     string str;
     try
     {
-        MyList<person> l;
-        int n = 0;
-        bool stop = true;
-        do
+        clock_t t;
+        MyList<string> l;
+        for (int i = 0; i < 100; i++)
+            l.push_back(string());
+        t = clock();
+        cout << l.size() << endl;
+        for (int i = 0; i < 1000;i++)
         {
-            cout << "создание" << endl;
-            l.push_back(person());
-            l[n++].get();
-            cout << "закончить?"; cin >> str;
-            stop = (str == "stop") ? true : false;
-            system("cls");
-        } while (!stop);
-        cout << "вывод данных";
-        int i = 0;
-        for (MyList<person>::iterator it = l.begin(); it != l.end(); ++it)
-        {
-            cout << "\nстудент номер:" << ++i << endl;
-            (*it).out();
+            int n = rand() % 4;
+            switch (n)
+            {
+            case 0:
+            {
+                l.push_back(string());
+                cout << "push_back";
+                break;
+            }
+            case 1:
+            {
+                l.push_front(string());
+                cout << "push_front";
+                break;
+            }
+            case 2:
+            {
+                l.pop_back();
+                cout << "pop_back";
+                break;
+            }
+            case 3:
+            {
+                l.pop_front();
+                cout << "pop_front";
+                break;
+            }
+            }
         }
+        t = clock() - t;
+        cout << l.size() << endl;
+        cout << (double)t << "млс" << endl;
     }
     catch (MyExt er)
     {
